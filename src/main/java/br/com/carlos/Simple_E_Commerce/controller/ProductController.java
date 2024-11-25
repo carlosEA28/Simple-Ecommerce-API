@@ -1,6 +1,7 @@
 package br.com.carlos.Simple_E_Commerce.controller;
 
 import br.com.carlos.Simple_E_Commerce.dto.ProductDto;
+import br.com.carlos.Simple_E_Commerce.dto.ProductResponseDTO;
 import br.com.carlos.Simple_E_Commerce.entity.ProductEntity;
 import br.com.carlos.Simple_E_Commerce.service.ProductService;
 import jakarta.validation.Valid;
@@ -24,6 +25,11 @@ public class ProductController {
     ) {
         var product = productService.createProduct(dto, imgUrl);
         return ResponseEntity.ok(product);
+    }
+
+    @GetMapping
+    public ResponseEntity<ProductResponseDTO> getProductDetails(String productId){
+
     }
 
 }

@@ -16,4 +16,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         RestErrorMessage response = new RestErrorMessage(HttpStatus.CONFLICT, exception.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
+
+    private ResponseEntity<RestErrorMessage> productDoesNotExistsHandler(CategoryAlreadyExists exception) {
+        RestErrorMessage response = new RestErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
 }
