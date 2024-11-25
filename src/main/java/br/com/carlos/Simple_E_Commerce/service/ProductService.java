@@ -4,6 +4,7 @@ import br.com.carlos.Simple_E_Commerce.dto.ProductDto;
 import br.com.carlos.Simple_E_Commerce.entity.CategoryEntity;
 import br.com.carlos.Simple_E_Commerce.entity.ProductEntity;
 import br.com.carlos.Simple_E_Commerce.exception.ProductAlredyExists;
+import br.com.carlos.Simple_E_Commerce.repository.CategoryRepository;
 import br.com.carlos.Simple_E_Commerce.repository.ProductRepository;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
@@ -24,6 +25,9 @@ public class ProductService {
     private ProductRepository productRepository;
 
     @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
     private Cloudinary cloudinary;
 
     public ProductEntity createProduct(ProductDto dto, MultipartFile imgUrl) {
@@ -33,23 +37,21 @@ public class ProductService {
                 throw new ProductAlredyExists();
             });
 
-            File convFile = new File(System.getProperty("java.io.tmpdir") + "/" + imgUrl.getOriginalFilename());
-            FileOutputStream fos = new FileOutputStream(convFile);
-            fos.write(imgUrl.getBytes());
-            fos.close();
+            var pic = cloudinary.uploader().upload(imgUrl.getBytes(), ObjectUtils.asMap("folder", "/productImg/"));
 
-            var pic = cloudinary.uploader().upload(convFile, ObjectUtils.asMap("folder", "/productImg/"));
 
             var categoryId = new CategoryEntity();
             categoryId.setCategoryId(UUID.fromString(dto.categoryId()));
 
-            var newProduct = new ProductEntity();
+            var category = categoryRepository.findById(UUID.fromString(dto.categoryId()))
+                    .orElseThrow(() -> new RuntimeException("Category not found for ID: " + dto.categoryId()));
 
+            var newProduct = new ProductEntity();
             newProduct.setProductName(dto.name());
             newProduct.setDescription(dto.description());
             newProduct.setPrice(dto.price());
             newProduct.setImgUrl(pic.get("url").toString());
-            newProduct.setCategory(categoryId);
+            newProduct.setCategory(category);
 
             return productRepository.save(newProduct);
 
