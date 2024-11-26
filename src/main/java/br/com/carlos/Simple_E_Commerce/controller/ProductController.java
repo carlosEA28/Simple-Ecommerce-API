@@ -5,11 +5,12 @@ import br.com.carlos.Simple_E_Commerce.dto.ProductResponseDTO;
 import br.com.carlos.Simple_E_Commerce.entity.ProductEntity;
 import br.com.carlos.Simple_E_Commerce.service.ProductService;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
@@ -27,8 +28,12 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    @GetMapping
-    public ResponseEntity<ProductResponseDTO> getProductDetails(String productId){
+    // para admin
+    @GetMapping("/{productId}")
+    public ResponseEntity<Optional<ProductEntity>> getProductAllInfo(@PathVariable("productId") String productId) {
+        var product = productService.getProductDetails(productId);
+
+        return ResponseEntity.ok().body(Optional.ofNullable(product));
 
     }
 

@@ -1,7 +1,6 @@
 package br.com.carlos.Simple_E_Commerce.service;
 
 import br.com.carlos.Simple_E_Commerce.dto.ProductDto;
-import br.com.carlos.Simple_E_Commerce.dto.ProductResponseDTO;
 import br.com.carlos.Simple_E_Commerce.entity.CategoryEntity;
 import br.com.carlos.Simple_E_Commerce.entity.ProductEntity;
 import br.com.carlos.Simple_E_Commerce.exception.ProductAlredyExists;
@@ -16,9 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -63,9 +61,12 @@ public class ProductService {
 
 
     }
-    public ProductResponseDTO getProductDetails(ProductResponseDTO dto, String productId) {
-        return this.productRepository.findById(UUID.fromString(productId)).map(product -> {
-            return new ProductResponseDTO(dto.name(), dto.description(), dto.price());
-        }).orElseThrow(() -> new ProductDoesNotExists());
+
+    public ProductEntity getProductDetails(String productId) {
+
+        return productRepository.findById(UUID.fromString(productId))
+                .orElseThrow(ProductDoesNotExists::new);
     }
 }
+
+
