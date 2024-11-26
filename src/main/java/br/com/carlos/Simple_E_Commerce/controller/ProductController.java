@@ -29,12 +29,20 @@ public class ProductController {
     }
 
     // para admin
-    @GetMapping("/{productId}")
+    @GetMapping("/admin/{productId}")
     public ResponseEntity<Optional<ProductEntity>> getProductAllInfo(@PathVariable("productId") String productId) {
-        var product = productService.getProductDetails(productId);
+        var product = productService.getProductDetailsEntity(productId);
 
         return ResponseEntity.ok().body(Optional.ofNullable(product));
 
     }
 
+
+    //para user
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductResponseDTO> getProductInfo(@PathVariable("productId") String productId) {
+        var product = productService.getProductDetail(productId);
+
+        return ResponseEntity.ok().body(product);
+    }
 }
