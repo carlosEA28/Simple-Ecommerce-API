@@ -3,14 +3,19 @@ package br.com.carlos.Simple_E_Commerce.service;
 import br.com.carlos.Simple_E_Commerce.Domains.EmailService;
 import br.com.carlos.Simple_E_Commerce.Enums.Role;
 import br.com.carlos.Simple_E_Commerce.dto.CustomerDto;
+import br.com.carlos.Simple_E_Commerce.dto.LoginDto;
+import br.com.carlos.Simple_E_Commerce.dto.LoginResponseDto;
 import br.com.carlos.Simple_E_Commerce.entity.CustomerEntity;
 import br.com.carlos.Simple_E_Commerce.exception.UserAlreadyExists;
 import br.com.carlos.Simple_E_Commerce.exception.UserNotFound;
 import br.com.carlos.Simple_E_Commerce.repository.CustomerRepository;
+import br.com.carlos.Simple_E_Commerce.utils.JwtActions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class CustomerService {
@@ -24,8 +29,8 @@ public class CustomerService {
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
-//    @Autowired
-//    private JwtActions jwtActions;
+    @Autowired
+    private JwtActions jwtActions;
 
     @Autowired
     private EmailService emailService;
@@ -55,7 +60,6 @@ public class CustomerService {
                 resetUrl
         );
 
-        // Serviço de envio de e-mail (assumindo que `emailService` esteja configurado)
         emailService.sendEmail(email, subject, body);
     }
 
@@ -73,5 +77,13 @@ public class CustomerService {
 
         return customerRepository.save(customer);
     }
+
+    public LoginResponseDto login(LoginDto dto) {
+        customerRepository.findByEmail(dto.email()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                "Invalid email"));
+
+        return jwtActions.jwtCreate(dto);
+    }
+
 
 }

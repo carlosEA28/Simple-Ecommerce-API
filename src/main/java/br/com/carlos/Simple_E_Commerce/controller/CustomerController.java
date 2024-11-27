@@ -1,6 +1,8 @@
 package br.com.carlos.Simple_E_Commerce.controller;
 
 import br.com.carlos.Simple_E_Commerce.dto.CustomerDto;
+import br.com.carlos.Simple_E_Commerce.dto.LoginDto;
+import br.com.carlos.Simple_E_Commerce.dto.LoginResponseDto;
 import br.com.carlos.Simple_E_Commerce.entity.CustomerEntity;
 import br.com.carlos.Simple_E_Commerce.service.CustomerService;
 import jakarta.validation.Valid;
@@ -21,12 +23,6 @@ public class CustomerController {
     private CustomerService customerService;
 
 
-//    @PostMapping("/login")
-//    public ResponseEntity<> login(@RequestBody @Valid UserDto userDto) {
-//        var token = customerService.login(userDto.email(), userDto.password());
-//        return ResponseEntity.ok().body(Map.of("token", token));
-//    }
-
     @PostMapping("/register")
     public ResponseEntity<CustomerEntity> register(@RequestBody @Valid CustomerDto customerDto) {
         var customer = customerService.createCustomer(customerDto);
@@ -34,6 +30,12 @@ public class CustomerController {
         return ResponseEntity.ok().body(customer);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> login(@RequestBody @Valid LoginDto dto) {
+        var token = customerService.login(dto);
+
+        return ResponseEntity.ok().body(token);
+    }
 //    @PostMapping("/redeem-password")
 //    public ResponseEntity<> redeemPassword(@RequestBody @Valid UserRedeemPasswordDto userDto) {
 //        customerService.redeemPassword(userDto.email());
