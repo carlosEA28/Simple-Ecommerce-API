@@ -17,6 +17,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
+import java.util.UUID;
+
 @Service
 public class CustomerService {
 
@@ -85,5 +88,16 @@ public class CustomerService {
         return jwtActions.jwtCreate(dto);
     }
 
+    public void reedemPassword(String email) {
+        var customer = customerRepository.findByEmail(email).orElseThrow(UserNotFound::new);
+
+        var token = UUID.randomUUID().toString();
+
+        customer.withResetToken(token, Instant.now().plusSeconds(this.tokenExpirationSeconds));
+
+        customerRepository.save(customer);
+
+        sendPasswordResetEmail(customer.getEmail(), token);
+    }
 
 }

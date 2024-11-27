@@ -1,8 +1,6 @@
 package br.com.carlos.Simple_E_Commerce.controller;
 
-import br.com.carlos.Simple_E_Commerce.dto.CustomerDto;
-import br.com.carlos.Simple_E_Commerce.dto.LoginDto;
-import br.com.carlos.Simple_E_Commerce.dto.LoginResponseDto;
+import br.com.carlos.Simple_E_Commerce.dto.*;
 import br.com.carlos.Simple_E_Commerce.entity.CustomerEntity;
 import br.com.carlos.Simple_E_Commerce.service.CustomerService;
 import jakarta.validation.Valid;
@@ -36,12 +34,13 @@ public class CustomerController {
 
         return ResponseEntity.ok().body(token);
     }
-//    @PostMapping("/redeem-password")
-//    public ResponseEntity<> redeemPassword(@RequestBody @Valid UserRedeemPasswordDto userDto) {
-//        customerService.redeemPassword(userDto.email());
-//
-//        return ResponseEntity.ok().body(Map.of("message", "Send the redeem password link to your email"));
-//    }
+
+    @PostMapping("/redeem-password")
+    public ResponseEntity<Map<String, String>> redeemPassword(@RequestBody @Valid CustomerReedemPasswordDto customerReedemPasswordDto) {
+        customerService.reedemPassword(customerReedemPasswordDto.email());
+
+        return ResponseEntity.ok().body(Map.of("message", "Send the redeem password link to your email"));
+    }
 //
 //    @PostMapping("/reset-password")
 //    public ResponseEntity<> resetPassword(@RequestBody @Valid UserResetPasswordDto userDto) {

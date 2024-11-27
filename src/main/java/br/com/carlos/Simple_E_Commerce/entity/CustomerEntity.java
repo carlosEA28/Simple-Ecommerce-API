@@ -48,12 +48,19 @@ public class CustomerEntity {
     @NotNull(message = "A data de criação não pode ser nula.")
     private LocalDateTime createdAt;
 
+    public CustomerEntity withResetToken(String resetToken, Instant resetTokenAdditionalTime) {
+        this.resetToken = resetToken;
+        this.resetTokenExpiration = resetTokenAdditionalTime;
+        return this;
+    }
+
     @PrePersist
     protected void onCreate() {
         if (this.createdAt == null) {
             this.createdAt = LocalDateTime.now();
         }
     }
+
     @OneToOne
     @JoinColumn(name = "order_id")
     private OrderEntity order;
