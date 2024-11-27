@@ -1,14 +1,18 @@
 package br.com.carlos.Simple_E_Commerce.entity;
 
+import br.com.carlos.Simple_E_Commerce.Enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -35,9 +39,21 @@ public class CustomerEntity {
     @NotBlank(message = "The field [name] cannot be empty")
     private String password;
 
-    @NotBlank(message = "The field [name] cannot be empty")
-    private LocalDate createdAt;
+    private String resetToken;
+    private Instant resetTokenExpiration;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @NotNull(message = "A data de criação não pode ser nula.")
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
+    }
     @OneToOne
     @JoinColumn(name = "order_id")
     private OrderEntity order;

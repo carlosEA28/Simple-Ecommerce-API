@@ -23,14 +23,11 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.POST, "/user").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user/redeem-password").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user/reset-password").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/category").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/product/addProduct").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/product/addProduct").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/product/admin/{productId}").authenticated()
                         .requestMatchers(HttpMethod.GET, "/product/{productId}").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(config -> config.jwt(jwt -> jwt.decoder(jwtConfig.jwtDecoder())));
