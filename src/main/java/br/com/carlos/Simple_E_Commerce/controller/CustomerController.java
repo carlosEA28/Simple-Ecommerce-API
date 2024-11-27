@@ -37,15 +37,16 @@ public class CustomerController {
 
     @PostMapping("/redeem-password")
     public ResponseEntity<Map<String, String>> redeemPassword(@RequestBody @Valid CustomerReedemPasswordDto customerReedemPasswordDto) {
-        customerService.reedemPassword(customerReedemPasswordDto.email());
+        customerService.redeemPassword(customerReedemPasswordDto.email());
 
         return ResponseEntity.ok().body(Map.of("message", "Send the redeem password link to your email"));
     }
-//
-//    @PostMapping("/reset-password")
-//    public ResponseEntity<> resetPassword(@RequestBody @Valid UserResetPasswordDto userDto) {
-//        customerService.resetPassword(userDto.token(), userDto.password());
-//
-//        return ResponseEntity.ok().body(Map.of("message", "Credentials updated"));
-//    }
+
+    //
+    @PostMapping("/reset-password")
+    public ResponseEntity<Map<String, String>> resetPassword(@RequestBody @Valid CustomerResetPasswordDto dto) {
+        customerService.resetPassword(dto);
+
+        return ResponseEntity.ok().body(Map.of("message", "Credentials updated"));
+    }
 }

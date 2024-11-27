@@ -3,6 +3,7 @@ package br.com.carlos.Simple_E_Commerce.service;
 import br.com.carlos.Simple_E_Commerce.Domains.EmailService;
 import br.com.carlos.Simple_E_Commerce.Enums.Role;
 import br.com.carlos.Simple_E_Commerce.dto.CustomerDto;
+import br.com.carlos.Simple_E_Commerce.dto.CustomerResetPasswordDto;
 import br.com.carlos.Simple_E_Commerce.dto.LoginDto;
 import br.com.carlos.Simple_E_Commerce.dto.LoginResponseDto;
 import br.com.carlos.Simple_E_Commerce.entity.CustomerEntity;
@@ -82,13 +83,18 @@ public class CustomerService {
     }
 
     public LoginResponseDto login(LoginDto dto) {
-        customerRepository.findByEmail(dto.email()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+        var customer = customerRepository.findByEmail(dto.email()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
                 "Invalid email"));
 
+
+        if (!bCryptPasswordEncoder.matches(dto.password(), customer.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid password");
+        }
         return jwtActions.jwtCreate(dto);
     }
 
-    public void reedemPassword(String email) {
+
+    public void redeemPassword(String email) {
         var customer = customerRepository.findByEmail(email).orElseThrow(UserNotFound::new);
 
         var token = UUID.randomUUID().toString();
@@ -100,4 +106,13 @@ public class CustomerService {
         sendPasswordResetEmail(customer.getEmail(), token);
     }
 
+    public void resetPassword(CustomerResetPasswordDto customerResetPasswordDto) {
+        var customer = customerRepository.findByResetToken(customerResetPasswordDto.token()).orElseThrow(UserNotFound::new);
+
+        customer.setPassword(bCryptPasswordEncoder.encode(customerResetPasswordDto.password()));
+
+        customer.withResetToken(null, null);
+
+        customerRepository.save(customer);
+    }
 }
