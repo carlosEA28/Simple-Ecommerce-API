@@ -21,6 +21,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    //fazer com que só com a role admin, possa fazer a ação
     @PostMapping("/addProduct")
     public ResponseEntity<ProductEntity> createProduct(
             @RequestPart("dto") @Valid ProductDto dto,
@@ -30,7 +31,7 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    // para admin
+    //fazer com que só com a role admin, possa fazer a ação
     @GetMapping("/admin/{productId}")
     public ResponseEntity<Optional<ProductEntity>> getProductAllInfo(@PathVariable("productId") String productId) {
         var product = productService.getProductDetailsEntity(productId);
@@ -38,7 +39,6 @@ public class ProductController {
         return ResponseEntity.ok().body(Optional.ofNullable(product));
 
     }
-
 
     //para user
     @GetMapping("/{productId}")
@@ -54,6 +54,7 @@ public class ProductController {
         return ResponseEntity.ok().body(products);
     }
 
+    //fazer com que só com a role admin, possa fazer a ação
     @DeleteMapping("/{productId}")
     public void delteProduct(@PathVariable("productId") String productId) {
         productService.deleteProduct(productId);
