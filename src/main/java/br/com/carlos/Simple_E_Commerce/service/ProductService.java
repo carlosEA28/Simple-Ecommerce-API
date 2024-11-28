@@ -97,6 +97,10 @@ public class ProductService {
                 .toList();
     }
 
+    public void deleteProduct(String productId) {
+        productRepository.deleteById(UUID.fromString(productId));
+
+    }
 
 }
 
