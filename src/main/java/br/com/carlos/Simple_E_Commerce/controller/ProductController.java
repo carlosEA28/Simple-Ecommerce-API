@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/product")
@@ -45,4 +47,12 @@ public class ProductController {
 
         return ResponseEntity.ok().body(product);
     }
+
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<ProductResponseDTO>> getAllProductsByCategory(@PathVariable UUID categoryId) {
+        var products = productService.getAllProductsByCategory(categoryId);
+        return ResponseEntity.ok().body(products);
+    }
+
+
 }

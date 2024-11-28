@@ -86,7 +86,6 @@ public class CustomerService {
         var customer = customerRepository.findByEmail(dto.email()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
                 "Invalid email"));
 
-
         if (!bCryptPasswordEncoder.matches(dto.password(), customer.getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid password");
         }

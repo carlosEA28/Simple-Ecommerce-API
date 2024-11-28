@@ -33,8 +33,8 @@ public class ProductEntity {
     @NotNull(message = "The field [imgUrl] cannot be null")
     private String imgUrl;
 
-    @OneToOne
-    @JoinColumn(name = "category_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id", nullable = false)
     private CategoryEntity category;
 
 

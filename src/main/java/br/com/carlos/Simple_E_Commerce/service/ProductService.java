@@ -17,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -77,5 +79,24 @@ public class ProductService {
 
         return new ProductResponseDTO(product.getProductName(), product.getDescription(), product.getPrice(), categoryName);
     }
+
+    public List<ProductResponseDTO> getAllProductsByCategory(UUID categoryId) {
+        var products = productRepository.findByCategory_CategoryId(categoryId);
+
+        if (products.isEmpty()) {
+            throw new ProductDoesNotExists();
+        }
+
+        return products.stream()
+                .map(product -> new ProductResponseDTO(
+                        product.getProductName(),
+                        product.getDescription(),
+                        product.getPrice(),
+                        product.getCategory().getCategoryName()
+                ))
+                .toList();
+    }
+
+
 }
 
