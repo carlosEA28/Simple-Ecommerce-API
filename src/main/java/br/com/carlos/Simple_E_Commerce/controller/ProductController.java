@@ -56,7 +56,7 @@ public class ProductController {
 
     //fazer com que só com a role admin, possa fazer a ação
     @DeleteMapping("/{productId}")
-    public void delteProduct(@PathVariable("productId") String productId) {
+    public void deleteProduct(@PathVariable("productId") String productId) {
         productService.deleteProduct(productId);
     }
 }

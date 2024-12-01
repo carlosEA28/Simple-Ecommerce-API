@@ -1,5 +1,6 @@
 package br.com.carlos.Simple_E_Commerce.config;
 
+import br.com.carlos.Simple_E_Commerce.Enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,8 +27,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/user").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/user/redeem-password").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/user/reset-password").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user/redeem-password").hasAuthority(String.valueOf(Role.CLIENT))
+                        .requestMatchers(HttpMethod.POST, "/user/reset-password").hasAuthority(String.valueOf(Role.CLIENT))
                         .requestMatchers(HttpMethod.GET, "/product/{productId}").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(config -> config.jwt(jwt -> jwt.decoder(jwtConfig.jwtDecoder())));
