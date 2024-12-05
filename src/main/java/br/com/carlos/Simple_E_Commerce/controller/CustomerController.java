@@ -42,7 +42,7 @@ public class CustomerController {
         return ResponseEntity.ok().body(Map.of("message", "Send the redeem password link to your email"));
     }
 
-    //
+
     @PostMapping("/reset-password")
     public ResponseEntity<Map<String, String>> resetPassword(@RequestBody @Valid CustomerResetPasswordDto dto) {
         customerService.resetPassword(dto);
