@@ -1,6 +1,7 @@
 package br.com.carlos.Simple_E_Commerce.service;
 
 import br.com.carlos.Simple_E_Commerce.entity.CartEntity;
+import br.com.carlos.Simple_E_Commerce.entity.ProductEntity;
 import br.com.carlos.Simple_E_Commerce.exception.ProductDoesNotExists;
 import br.com.carlos.Simple_E_Commerce.exception.UserNotFound;
 import br.com.carlos.Simple_E_Commerce.repository.CartRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @Service
 public class CartService {
@@ -39,13 +41,30 @@ public class CartService {
     }
 
     public List<CartEntity> getCartItems(String customerId) {
-        // Verifica se o cliente existe
         customerRepository.findByCustomerId(UUID.fromString(customerId))
                 .orElseThrow(UserNotFound::new);
 
-        // Busca os itens do carrinho relacionados ao cliente
         return cartRepository.findByCustomerCustomerId(UUID.fromString(customerId));
     }
 
+    public double calculateCartTotal(String customerId) {
+        var customer = customerRepository.findByCustomerId(UUID.fromString(customerId))
+                .orElseThrow(() -> new UserNotFound());
 
+
+        var carts = cartRepository.findByCustomerCustomerId(customer.getCustomerId());
+        double totalPrice = 0.0;
+
+        for (CartEntity cartEntity : carts) {
+            var products = cartEntity.getProduct();
+
+            for (ProductEntity product : products) {
+                totalPrice += product.getPrice();
+            }
+        }
+
+        return totalPrice;
+    }
 }
+
+

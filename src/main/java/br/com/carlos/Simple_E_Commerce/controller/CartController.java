@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/cart")
@@ -40,4 +41,10 @@ public class CartController {
         return ResponseEntity.ok().body(products);
     }
 
+    @GetMapping("/total")
+    public ResponseEntity<Double> carTotal(@RequestHeader String customerId) {
+        var total = cartService.calculateCartTotal(customerId);
+
+        return ResponseEntity.ok().body(total);
+    }
 }

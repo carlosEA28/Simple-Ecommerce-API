@@ -11,6 +11,7 @@ import lombok.Setter;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @Entity
 @AllArgsConstructor
@@ -32,10 +33,5 @@ public class CartEntity {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "cart_id")
     private List<ProductEntity> product;
-
-    public Double getTotal() {
-
-        return null;
-    }
 }
 
